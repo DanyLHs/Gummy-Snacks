@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gummy Snacks</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .bg-gradient {
+            background: linear-gradient(135deg, #f3e7f7 0%, #e5ccf3 100%);
+        }
+        .product-card {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        #cart-sidebar {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            padding-top: 4rem;
+        }
+        #cart-sidebar.open {
+            transform: translateX(0);
+        }
+        .page {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .page.active {
+            display: block;
+            opacity: 1;
+        }
+        .nav-button {
+            transition: all 0.3s ease-in-out;
+        }
+        .nav-button:not(.active) {
+            background-color: #e5e7eb;
+            color: #1f2937;
+        }
+        .nav-button.active {
+            background-color: #10b981;
+            color: white;
+        }
+        #special-offer-banner {
+            position: fixed;
+            top: 16px;
+            left: 0;
+            right: 0;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+        #cart-items {
+            max-height: calc(100vh - 12rem);
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-gradient min-h-screen">
+    <nav class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center p-4 bg-white bg-opacity-80 backdrop-filter backdrop-blur-md shadow-md">
+        <div class="flex items-center space-x-4">
+            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/GS%20colors%205-HRxWwilprDTzJWqVHItH5N53SWT6Wh.png" alt="Gummy Snacks Logo" class="w-12 h-12">
+            <a href="#home" class="nav-button active bg-purple-500 text-white px-4 py-2 rounded-full transition-all duration-300 ease-in-out" data-translate="home">Inicio</a>
+            <a href="#products" class="nav-button bg-gray-200 text-gray-800 px-4 py-2 rounded-full transition-all duration-300 ease-in-out" data-translate="products">Productos</a>
+            <a href="#contact" class="nav-button bg-gray-200 text-gray-800 px-4 py-2 rounded-full transition-all duration-300 ease-in-out" data-translate="contact">Contacto</a>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button id="cart-button" class="relative bg-indigo-500 text-white p-2 rounded-full hover:bg-indigo-600 transition-colors duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 004 0z" />
+                </svg>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+            </button>
+            <select id="language-select" class="bg-gray-200 text-gray-800 px-2 py-1 rounded-md">
+                <option value="es">🇪🇸 ES</option>
+                <option value="en">🇺🇸 EN</option>
+            </select>
+        </div>
+    </nav>
+
+    <div id="special-offer-banner" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-xl max-w-md mx-auto">
+            <h2 class="text-2xl font-bold mb-4 text-indigo-600" data-translate="specialOffer">¡Oferta Especial!</h2>
+            <p class="text-gray-700 mb-6" data-translate="specialOfferBanner">¡Oferta especial! 10% de descuento en tu primera compra</p>
+            <button id="special-offer-close" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105" data-translate="close">
+                Cerrar
+            </button>
+        </div>
+    </div>
+
+
+    <main class="pt-20 pb-16">
+        <section id="home" class="page active p-8">
+            <h1 class="text-4xl sm:text-6xl font-bold text-center mb-8 text-purple-600" data-translate="title">Gummy Snacks</h1>
+            <p class="text-xl sm:text-2xl text-center mb-12 text-pink-500" data-translate="subtitle">
+                Deliciosas brochetas de malvaviscos y bolsitas de gominolas
+            </p>
+            <div class="flex justify-center">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Elss-Ym96F2J5k6tcCblf8xxnjuLBZs9Y4m.png" alt="Gummy Snacks Logo" class="w-64 h-64 md:w-80 md:h-80">
+            </div>
+            <div class="mt-12 text-center">
+                <button id="special-offer-button" class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105" data-translate="specialOffer">
+                    ¡Oferta Especial!
+                </button>
+            </div>
+        </section>
+
+        <section id="products" class="page p-8">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12 text-teal-600" data-translate="products">Productos</h2>
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- Product cards will be dynamically inserted here -->
+            </div>
+            <div class="mt-8 text-center">
+                <button id="load-more" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105" data-translate="loadMore">
+                    Cargar más
+                </button>
+            </div>
+        </section>
+
+        <section id="contact" class="page p-8">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12 text-yellow-500" data-translate="contact">Contacto</h2>
+            <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-xl">
+                <div class="flex justify-center space-x-6 mb-8">
+                    <a href="https://facebook.com/gummysnacks" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                    </a>
+                    <a href="https://instagram.com/gummysnacks" target="_blank" rel="noopener noreferrer" class="text-pink-500 hover:text-pink-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    </a>
+                    <a href="https://twitter.com/gummysnacks" target="_blank" rel="noopener noreferrer" class="text-sky-500 hover:text-sky-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+                    </a>
+                </div>
+                <form id="contact-form" class="space-y-4">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700" data-translate="name">Nombre</label>
+                        <input type="text" id="name" name="name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700" data-translate="email">Correo electrónico</label>
+                        <input type="email" id="email" name="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-gray-700" data-translate="message">Mensaje</label>
+                        <textarea id="message" name="message" rows="4" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
+                    </div>
+                    <div>
+                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" data-translate="send">
+                            Enviar Mensaje
+                        </button>
+                    </div>
+                </form>
+                <div class="mt-8 space-y-4">
+                    <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-green-500">
+                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                        </svg>
+                        <p><span data-translate="whatsapp">WhatsApp</span>: 686-123-4567</p>
+                    </div>
+                    <div  class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-purple-500"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84  0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                        <p><span data-translate="telephone">Teléfono</span>: 686-123-4567</p>
+                    </div>
+                    <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-red-500"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        <p><span data-translate="address">Dirección</span>: 123 Calle Dulce, Ciudad Golosina, CP 12345</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-64 md:w-80 bg-white shadow-xl p-4 md:p-6 transform transition-transform duration-300 ease-in-out">
+        <h2 class="text-xl md:text-2xl font-bold mb-4" data-translate="cart">Carrito</h2>
+        <div id="cart-items"></div>
+        <div class="mt-4">
+            <p class="font-bold"><span data-translate="total">Total</span>: $<span id="cart-total">0.00</span></p>
+            <button id="checkout-button" class="mt-2 w-full bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600 transition-colors duration-300" data-translate="checkout">
+                Pagar
+            </button>
+            <button id="clear-cart" class="mt-2 w-full bg-red-500 text-white py-2 px-4 rounded-full hover:bg-red-600 transition-colors duration-300" data-translate="clearCart">
+                Vaciar carrito
+            </button>
+        </div>
+    </div>
+
+    <div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-xl max-w-md mx-auto">
+            <h2 id="modal-title" class="text-2xl font-bold mb-4 text-indigo-600"></h2>
+            <p id="modal-message" class="text-gray-700 mb-6"></p>
+            <button id="modal-close" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105" data-translate="close">
+                Cerrar
+            </button>
+        </div>
+    </div>
+
+    <footer class="fixed bottom-0 left-0 right-0 bg-white bg-opacity-80 backdrop-filter backdrop-blur-md p-4 text-center text-gray-600 shadow-md">
+        <p>&copy; 2024 Gummy Snacks. <span data-translate="copyright">Todos los derechos reservados.</span></p>
+    </footer>
+
+    <script>
+        const translations = {
+            es: {
+                home: 'Inicio',
+                products: 'Productos',
+                contact: 'Contacto',
+                title: 'Gummy Snacks',
+                subtitle: 'Deliciosas brochetas de malvaviscos y bolsitas de gominolas',
+                specialOffer: '¡Oferta Especial!',
+                specialOfferBanner: '¡Oferta especial! 10% de descuento en tu primera compra',
+                addToCart: 'Añadir al carrito',
+                cart: 'Carrito',
+                checkout: 'Pagar',
+                total: 'Total',
+                name: 'Nombre',
+                email: 'Correo electrónico',
+                message: 'Mensaje',
+                send: 'Enviar Mensaje',
+                whatsapp: 'WhatsApp',
+                telephone: 'Teléfono',
+                address: 'Dirección',
+                copyright: 'Todos los derechos reservados.',
+                close: 'Cerrar',
+                notAvailable: 'Compras en línea no disponibles',
+                visitStore: 'Por el momento, las compras en línea no están disponibles. Le invitamos a visitar nuestra tienda física donde estaremos encantados de atenderle.',
+                emptyCart: 'No hay productos en el carrito',
+                removeFromCart: 'Eliminar del carrito',
+                productAdded: 'Producto añadido al carrito',
+                messageSent: 'Mensaje Enviado',
+                messageReceived: 'Hemos recibido tu mensaje. Te contactaremos pronto.',
+                clearCart: 'Vaciar carrito',
+                cartCleared: 'El carrito ha sido vaciado',
+                loadMore: 'Cargar más'
+            },
+            en: {
+                home: 'Home',
+                products: 'Products',
+                contact: 'Contact',
+                title: 'Gummy Snacks',
+                subtitle: 'Delicious marshmallow skewers and gummy bags',
+                specialOffer: 'Special Offer!',
+                specialOfferBanner: 'Special offer! 10% off your first purchase',
+                addToCart: 'Add to Cart',
+                cart: 'Cart',
+                checkout: 'Checkout',
+                total: 'Total',
+                name: 'Name',
+                email: 'Email',
+                message: 'Message',
+                send: 'Send Message',
+                whatsapp: 'WhatsApp',
+                telephone: 'Telephone',
+                address: 'Address',
+                copyright: 'All rights reserved.',
+                close: 'Close',
+                notAvailable: 'Online purchases not available',
+                visitStore: 'At the moment, online purchases are not available. We invite you to visit our physical store where we will be happy to assist you.',
+                emptyCart: 'There are no products in the cart',
+                removeFromCart: 'Remove from cart',
+                productAdded: 'Product added to cart',
+                messageSent: 'Message Sent',
+                messageReceived: 'We have received your message. We will contact you soon.',
+                clearCart: 'Clear cart',
+                cartCleared: 'The cart has been cleared',
+                loadMore: 'Load more'
+            }
+        };
+
+        const products = [
+            { 
+                id: 1, 
+                title: {
+                    es: "Brochetas de Malvaviscos",
+                    en: "Marshmallow Skewers"
+                }, 
+                description: {
+                    es: "Disfruta de nuestras coloridas y deliciosas brochetas de malvaviscos. Perfectas para fiestas y eventos especiales.",
+                    en: "Enjoy our colorful and delicious marshmallow skewers. Perfect for parties and special events."
+                }, 
+                image: "/placeholder.svg?height=200&width=200", 
+                price: 25 
+            },
+            { 
+                id: 2, 
+                title: {
+                    es: "Bolsitas de Gominolas",
+                    en: "Gummy Bags"
+                }, 
+                description: {
+                    es: "Bolsitas llenas de sabor y diversión. Una mezcla perfecta de gominolas para todos los gustos.",
+                    en: "Bags full of flavor and fun. A perfect mix of gummies for all tastes."
+                }, 
+                image: "/placeholder.svg?height=200&width=200", 
+                price: 20 
+            },
+            { 
+                id: 3, 
+                title: {
+                    es: "Mix de Dulces",
+                    en: "Candy Mix"
+                }, 
+                description: {
+                    es: "Una combinación irresistible de nuestras mejores golosinas. Ideal para compartir o disfrutar solo.",
+                    en: "An irresistible combination of our best sweets. Ideal for sharing or enjoying alone."
+                }, 
+                image: "/placeholder.svg?height=200&width=200", 
+                price: 25 
+            },
+            { 
+                id: 4, 
+                title: {
+                    es: "Gominolas Personalizadas",
+                    en: "Custom Gummies"
+                }, 
+                description: {
+                    es: "Crea tu propia mezcla de gominolas. Elige tus favoritas y nosotros las empaquetamos para ti.",
+                    en: "Create your own gummy mix. Choose your favorites and we'll package them for you."
+                }, 
+                image: "/placeholder.svg?height=200&width=200", 
+                price: 10 
+            },
+        ];
+
+        let currentLanguage = 'es';
+        let cart = [];
+        let currentPage = 1;
+        const productsPerPage = 4;
+
+        function updateLanguage(lang) {
+            currentLanguage = lang;
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+            updateProductCards();
+            updateCart();
+        }
+
+        function updateProductCards() {
+            const productGrid = document.getElementById('product-grid');
+            productGrid.innerHTML = '';
+            const startIndex = (currentPage - 1) * productsPerPage;
+            const endIndex = startIndex + productsPerPage;
+            const productsToShow = products.slice(startIndex, endIndex);
+
+            productsToShow.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card bg-white p-6 rounded-lg shadow-lg transition-transform duration-300 hover:scale-105';
+                card.innerHTML = `
+                    <img src="${product.image}" alt="${product.title[currentLanguage]}" class="w-full h-48 object-cover rounded-md mb-4">
+                    <h3 class="text-xl font-semibold mb-2 text-purple-600">${product.title[currentLanguage]}</h3>
+                    <p class="text-gray-600 mb-4">${product.description[currentLanguage]}</p>
+                    <div class="flex justify-between items-center">
+                        <p class="text-lg font-bold text-teal-600">$${product.price.toFixed(2)}</p>
+                        <button onclick="addToCart(${product.id})" class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
+                            ${translations[currentLanguage].addToCart}
+                        </button>
+                    </div>
+                `;
+                productGrid.appendChild(card);
+            });
+            animateProducts();
+
+            const loadMoreButton = document.getElementById('load-more');
+            if (endIndex >= products.length) {
+                loadMoreButton.style.display = 'none';
+            } else {
+                loadMoreButton.style.display = 'inline-block';
+            }
+        }
+
+        function animateProducts() {
+            const productCards = document.querySelectorAll('.product-card');
+            productCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            updateCart();
+            saveCartToLocalStorage();
+            showModal('cart', 'productAdded');
+        }
+
+        function updateCart() {
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            const cartCount = document.getElementById('cart-count');
+            const checkoutButton = document.getElementById('checkout-button');
+
+            cartItems.innerHTML = '';
+            let total = 0;
+            let count = 0;
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = `<p class="text-gray-500">${translations[currentLanguage].emptyCart}</p>`;
+                checkoutButton.style.display = 'none';
+            } else {
+                checkoutButton.style.display = 'block';
+                cart.forEach(item => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'flex justify-between items-center mb-2';
+                    itemElement.innerHTML = `
+                        <span>${item.title[currentLanguage]}</span>
+                        <div class="flex items-center">
+                            <button onclick="updateCartItem(${item.id}, ${item.quantity - 1})" class="px-2 py-1 bg-gray-200 rounded-l">-</button>
+                            <span class="px-2 py-1 bg-gray-100">${item.quantity}</span>
+                            <button onclick="updateCartItem(${item.id}, ${item.quantity + 1})" class="px-2 py-1 bg-gray-200 rounded-r">+</button>
+                            <button onclick="removeFromCart(${item.id})" class="ml-2 text-red-500" title="${translations[currentLanguage].removeFromCart}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+                    `;
+                    cartItems.appendChild(itemElement);
+                    total += item.price * item.quantity;
+                    count += item.quantity;
+                });
+            }
+
+            cartTotal.textContent = total.toFixed(2);
+            cartCount.textContent = count;
+        }
+
+        function updateCartItem(productId, newQuantity) {
+            if (newQuantity > 0) {
+                const item = cart.find(item => item.id === productId);
+                if (item) {
+                    item.quantity = newQuantity;
+                    updateCart();
+                    saveCartToLocalStorage();
+                }
+            } else {
+                removeFromCart(productId);
+            }
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCart();
+            saveCartToLocalStorage();
+        }
+
+        function showModal(title, messageKey) {
+            const modal = document.getElementById('modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalMessage = document.getElementById('modal-message');
+
+            modalTitle.textContent = translations[currentLanguage][title];
+            modalMessage.textContent = translations[currentLanguage][messageKey];
+            modal.classList.remove('hidden');
+        }
+
+        function changePage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+                page.style.opacity = '0';
+            });
+            const newPage = document.getElementById(pageId);
+            newPage.classList.add('active');
+            setTimeout(() => {
+                newPage.style.opacity = '1';
+            }, 50);
+            
+            document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active', 'bg-purple-500', 'text-white'));
+            document.querySelector(`.nav-button[href="#${pageId}"]`).classList.add('active', 'bg-purple-500', 'text-white');
+        }
+
+        function showSpecialOffer() {
+            const banner = document.getElementById('special-offer-banner');
+            banner.classList.remove('hidden');
+        }
+
+        function saveCartToLocalStorage() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        function loadCartFromLocalStorage() {
+            const savedCart = localStorage.getItem('cart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+                updateCart();
+            }
+        }
+
+        document.getElementById('language-select').addEventListener('change', (e) => {
+            updateLanguage(e.target.value);
+        });
+
+        document.getElementById('cart-button').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('cart-sidebar').classList.toggle('open');
+        });
+
+        document.getElementById('checkout-button').addEventListener('click', () => {
+            showModal('notAvailable', 'visitStore');
+        });
+
+        document.getElementById('special-offer-button').addEventListener('click', () => {
+            showSpecialOffer();
+        });
+
+        document.getElementById('modal-close').addEventListener('click', () => {
+            document.getElementById('modal').classList.add('hidden');
+        });
+
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            showModal('messageSent', 'messageReceived');
+            e.target.reset();
+        });
+
+        document.querySelectorAll('.nav-button').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = e.target.getAttribute('href').slice(1);
+                changePage(pageId);
+            });
+        });
+
+document.addEventListener('click', (e) => {
+    const cartSidebar = document.getElementById('cart-sidebar');
+    const cartButton = document.getElementById('cart-button');
+    const checkoutButton = document.getElementById('checkout-button'); // Botón de Pagar
+    const clearCartButton = document.getElementById('clear-cart'); // Botón de Vaciar carrito
+    const modal = document.getElementById('modal'); // Ventana emergente de modal (si tienes otras modales, agrégalas aquí)
+
+    // Solo cierra el carrito si el clic ocurre fuera del carrito, botón del carrito, y fuera de los botones/modales que no deben cerrarlo
+    if (!cartSidebar.contains(e.target) && 
+        !cartButton.contains(e.target) && 
+        !checkoutButton.contains(e.target) && 
+        !clearCartButton.contains(e.target) &&
+        !modal.contains(e.target)) {
+        cartSidebar.classList.remove('open');
+    }
+});
+
+// Evitar que los clics dentro del carrito cierren el menú
+document.getElementById('cart-sidebar').addEventListener('click', (e) => {
+    e.stopPropagation();
+});
+        document.getElementById('clear-cart').addEventListener('click', () => {
+            cart = [];
+            updateCart();
+            saveCartToLocalStorage();
+            showModal('cart', 'cartCleared');
+        });
+
+        document.getElementById('load-more').addEventListener('click', () => {
+            currentPage++;
+            updateProductCards();
+        });
+            document.getElementById('special-offer-close').addEventListener('click', () => {
+                document.getElementById('special-offer-banner').classList.add('hidden');
+        });
+
+        // Initialize the page
+        updateLanguage(currentLanguage);
+        updateProductCards();
+        loadCartFromLocalStorage();
+    </script>
+</body>
+</html>
